@@ -4,33 +4,7 @@
     <meta charset="UTF-8">
     <title>The R.I.C.K Archives</title>
     <subtitle>V: 1.1.13</subtitle>
-    <div id="visitorCount">Visitors online: loading...</div>
-
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getDatabase, ref, push, onValue, onDisconnect, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  databaseURL: "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
-  projectId: "YOUR_PROJECT",
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-const connectionsRef = ref(db, "connections");
-
-const myConnection = push(connectionsRef, true);
-onDisconnect(myConnection).remove();
-
-onValue(connectionsRef, snapshot => {
-  document.getElementById("visitorCount").textContent =
-    "Visitors online: " + snapshot.size;
-});
-</script>
-
-
+    
     <style>
         body {
             margin: 0;
@@ -105,6 +79,25 @@ onValue(connectionsRef, snapshot => {
     </style>
 </head>
 <body>
+
+<button onclick="toggleMenu()">Download Tutorial</button>
+
+<div id="menu" style="display:none;">
+    <img src="image1.png" width="150">
+    <img src="image2.png" width="150">
+    <img src="image3.png" width="150">
+</div>
+
+<script>
+function toggleMenu() {
+    var menu = document.getElementById("menu");
+    if (menu.style.display === "none") {
+        menu.style.display = "block";
+    } else {
+        menu.style.display = "none";
+    }
+}
+</script>
 
 <header>
     <h1>The R.I.C.K Archives</h1>
