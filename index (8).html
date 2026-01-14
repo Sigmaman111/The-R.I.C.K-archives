@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The R.I.C.K Archives</title>
+    <subtitle>V: 1.1.13</subtitle>
+    
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #0b0b0b;
+            color: #ffffff;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            border-bottom: 2px solid #1f1f1f;
+        }
+
+        h1 {
+            font-size: 48px;
+            margin: 0;
+            letter-spacing: 2px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+            padding: 30px;
+        }
+
+        .archive-item {
+            display: flex;
+            align-items: center;
+            background: #141414;
+            border: 2px solid #222;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .archive-item img {
+            width: 240px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-right: 25px;
+            border: 2px solid #333;
+        }
+
+        .archive-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .archive-title {
+            font-size: 26px;
+            margin-bottom: 12px;
+        }
+
+        .download-button {
+            width: fit-content;
+            background: #1e1e1e;
+            color: #ffffff;
+            border: 2px solid #333;
+            padding: 10px 22px;
+            font-size: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .download-button:hover {
+            background: #2b2b2b;
+        }
+    </style>
+</head>
+<body>
+
+<button onclick="toggleMenu()">Open Menu</button>
+
+<div id="overlay" style="
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100vw;
+    height:100vh;
+    background:rgba(0,0,0,0.5);
+    z-index:9998;
+"></div>
+
+<div id="menu" style="
+    display:none;
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%, -50%);
+    width:700px;
+    background:#111;
+    border:2px solid grey;
+    border-radius:12px;
+    padding:20px;
+    z-index:9999;
+">
+
+<button onclick="toggleMenu()" style="float:right;">X</button>
+
+    <br><br>
+
+    <img src="https://raw.githubusercontent.com/Sigmaman111/The-R.I.C.K-archives/main/Screenshot%202026-01-14%202.22.03%20PM.png" width="200">
+    <img src="https://raw.githubusercontent.com/Sigmaman111/The-R.I.C.K-archives/main/Screenshot%202026-01-14%202.22.27%20PM.png" width="200">
+    <img src="https://raw.githubusercontent.com/Sigmaman111/The-R.I.C.K-archives/main/Screenshot%202026-01-14%202.22.54%20PM.png" width="200">
+
+</div>
+
+<script>
+function toggleMenu() {
+    var menu = document.getElementById("menu");
+    var overlay = document.getElementById("overlay");
+
+    if (menu.style.display === "none" || menu.style.display === "") {
+        menu.style.display = "block";
+        overlay.style.display = "block";
+    } else {
+        menu.style.display = "none";
+        overlay.style.display = "none";
+    }
+}
+</script>
+    
+<header>
+    <h1>The R.I.C.K Archives</h1>
+</header>
+
+<div class="container">
+
+    <!-- ARCHIVE ITEM -->
+    <div class="archive-item">
+        <img src="https://raw.githubusercontent.com/Sigmaman111/The-R.I.C.K-archives/main/Christmass_rickins.png" alt="Archive Image">
+        <div class="archive-info">
+            <div class="archive-title">Archive #001 Christmas Rick</div>
+            <a class="download-button"
+               href="https://github.com/Sigmaman111/The-R.I.C.K-archives/blob/main/Christmass_rickins.png?raw=true"
+               download>
+                Download
+            </a>
+        </div>
+    </div>
+
+    <div class="archive-item">
+        <img src="https://raw.githubusercontent.com/Sigmaman111/The-R.I.C.K-archives/main/beautifull_rickins.png" alt="Archive Image">
+        <div class="archive-info">
+            <div class="archive-title">Archive #002 Galactic Rick</div>
+            <a class="download-button"
+               href="https://github.com/Sigmaman111/The-R.I.C.K-archives/blob/main/beautifull_rickins.png?raw=true"
+               download>
+                Download
+            </a>
+        </div>
+    </div>
+
+    <div class="archive-item">
+        <img src="https://i.ibb.co/F45kBwJB/Yo-U-w-An-T-t-O-g-Iv-E-m-E-k-Ip-Pe-Rs-1.gif" alt="Archive Image">
+        <div class="archive-info">
+            <div class="archive-title">Archive #003 Hypnotic Rick</div>
+            <a class="download-button"
+               href="https://github.com/Sigmaman111/The-R.I.C.K-archives/blob/main/YoU%20wAnT%20tO%20gIvE%20mE%20kIpPeRs%20(1).gif?raw=true"
+               download>
+                Download
+            </a>
+        </div>
+    </div>
+
+    <div class="archive-item">
+        <img src="https://github.com/Sigmaman111/The-R.I.C.K-archives/blob/main/Untitled%20design%20(62).png?raw=true" alt="Archive Image">
+        <div class="archive-info">
+            <div class="archive-title">Archive #004 Disco Rick</div>
+            <a class="download-button" href="https://github.com/Sigmaman111/The-R.I.C.K-archives/blob/main/Untitled%20design%20(62).png?raw=true" target="_blank">
+                Download
+            </a>
+        </div>
+    </div>
+    
+    <div class="archive-item">
+        <img src="https://github.com/Sigmaman111/The-R.I.C.K-archives/blob/main/mystic.png?raw=true" alt="Archive Image">
+        <div class="archive-info">
+            <div class="archive-title">Archive #005 Mystic Rick</div>
+            <a class="download-button" href="https://github.com/Sigmaman111/The-R.I.C.K-archives/blob/main/mystic.png?raw=true" target="_blank">
+                Download
+            </a>
+        </div>
+    </div>
+
+    <div class="archive-item">
+        <img src="https://github.com/Sigmaman111/The-R.I.C.K-archives/blob/main/earth.png?raw=true" alt="Archive Image">
+        <div class="archive-info">
+            <div class="archive-title">Archive #006 Orbital Rick</div>
+            <a class="download-button" href="https://github.com/Sigmaman111/The-R.I.C.K-archives/blob/main/earth.png?raw=true" target="_blank">
+                Download
+            </a>
+        </div>
+    </div>
+
+    <div class="archive-item">
+        <img src="https://github.com/Sigmaman111/The-R.I.C.K-archives/blob/main/minecraft%20(2).png?raw=true" alt="Archive Image">
+        <div class="archive-info">
+            <div class="archive-title">Archive #007 Minecraft© Rick</div>
+            <a class="download-button" href="https://github.com/Sigmaman111/The-R.I.C.K-archives/blob/main/minecraft%20(2).png?raw=true" target="_blank">
+                Download
+            </a>
+        </div>
+    </div>
+    
+    <!-- COPY THIS BLOCK TO ADD MORE -->
+    <!--
+    <div class="archive-item">
+        <img src="IMAGE_URL_HERE" alt="Archive Image">
+        <div class="archive-info">
+            <div class="archive-title">YOUR TITLE HERE</div>
+            <a class="download-button" href="YOUR_DOWNLOAD_LINK_HERE" target="_blank">
+                Download
+            </a>
+        </div>
+    </div>
+    -->
+
+</div>
+
+</body>
+</html>
