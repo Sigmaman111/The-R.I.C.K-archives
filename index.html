@@ -4,6 +4,23 @@
     <meta charset="UTF-8">
     <title>The R.I.C.K Archives</title>
     <subtitle>V: 1.1.10</subtitle>
+    <div id="visitorCount">Visitors online: loading...</div>
+
+<script>
+async function update(action) {
+  const res = await fetch("counter.php?action=" + action);
+  const count = await res.text();
+  document.getElementById("visitorCount").textContent =
+    "Visitors online: " + count;
+}
+
+update("join");
+
+window.addEventListener("beforeunload", () => {
+  navigator.sendBeacon("counter.php?action=leave");
+});
+</script>
+
     <style>
         body {
             margin: 0;
