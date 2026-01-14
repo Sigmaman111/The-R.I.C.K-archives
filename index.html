@@ -80,42 +80,58 @@
 </head>
 <body>
 
-<button onclick="toggleMenu()">Download Tutorial</button>
+<button onclick="toggleMenu()">Open Menu</button>
 
-<div id="menu" style="
+<div id="overlay" style="
     display:none;
     position:fixed;
     top:0;
     left:0;
     width:100vw;
     height:100vh;
-    background:black;
+    background:rgba(0,0,0,0.5);
+    z-index:9998;
+"></div>
+
+<div id="menu" style="
+    display:none;
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%, -50%);
+    width:700px;
+    background:#111;
+    border:2px solid grey;
+    border-radius:12px;
+    padding:20px;
     z-index:9999;
 ">
 
-    <button onclick="toggleMenu()">Close</button>
+<button onclick="toggleMenu()" style="float:right;">X</button>
+
     <br><br>
 
-    <img src="https://raw.githubusercontent.com/Sigmaman111/The-R.I.C.K-archives/main/Screenshot%202026-01-14%202.22.03%20PM.png" style="width:90vw;">
-    <br><br>
-    <img src="https://raw.githubusercontent.com/Sigmaman111/The-R.I.C.K-archives/main/Screenshot%202026-01-14%202.22.27%20PM.png" style="width:90vw;">
-    <br><br>
-    <img src="https://raw.githubusercontent.com/Sigmaman111/The-R.I.C.K-archives/main/Screenshot%202026-01-14%202.22.54%20PM.png" style="width:90vw;">
+    <img src="https://raw.githubusercontent.com/Sigmaman111/The-R.I.C.K-archives/main/Screenshot%202026-01-14%202.22.03%20PM.png" width="200">
+    <img src="https://raw.githubusercontent.com/Sigmaman111/The-R.I.C.K-archives/main/Screenshot%202026-01-14%202.22.27%20PM.png" width="200">
+    <img src="https://raw.githubusercontent.com/Sigmaman111/The-R.I.C.K-archives/main/Screenshot%202026-01-14%202.22.54%20PM.png" width="200">
 
 </div>
 
 <script>
 function toggleMenu() {
     var menu = document.getElementById("menu");
-    if (menu.style.display === "none") {
+    var overlay = document.getElementById("overlay");
+
+    if (menu.style.display === "none" || menu.style.display === "") {
         menu.style.display = "block";
+        overlay.style.display = "block";
     } else {
         menu.style.display = "none";
+        overlay.style.display = "none";
     }
 }
 </script>
-
-
+    
 <header>
     <h1>The R.I.C.K Archives</h1>
 </header>
