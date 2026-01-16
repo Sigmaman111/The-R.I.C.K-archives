@@ -150,10 +150,9 @@ function toggleMenu() {
     }
 }
 </script>
-
 <script>
 let canvas, ctx;
-let player, bones, bossImg, gameLoop;
+let player, bones, blasters, bossImg, gameLoop;
 let keys = {};
 let hp = 100;
 let running = false;
@@ -165,6 +164,7 @@ function startSansFight() {
 
     player = { x: 300, y: 300, size: 14, speed: 4 };
     bones = [];
+    blasters = [];
     hp = 100;
     running = true;
 
@@ -175,6 +175,8 @@ function startSansFight() {
     window.addEventListener("keyup", e => keys[e.key] = false);
 
     spawnBones();
+    spawnBlasters();
+
     gameLoop = setInterval(update, 1000 / 60);
 }
 
@@ -192,6 +194,27 @@ function spawnBones() {
     }, 800);
 }
 
+function spawnBlasters() {
+    setInterval(() => {
+        if (!running) return;
+
+        let side = Math.floor(Math.random() * 4);
+        let x, y;
+
+        if (side === 0) { x = -40; y = Math.random() * 400; }
+        if (side === 1) { x = 640; y = Math.random() * 400; }
+        if (side === 2) { x = Math.random() * 600; y = -40; }
+        if (side === 3) { x = Math.random() * 600; y = 440; }
+
+        blasters.push({
+            x, y,
+            timer: 0,
+            angle: 0,
+            firing: false
+        });
+    }, 3500);
+}
+
 function update() {
     if (!running) return;
 
@@ -201,6 +224,7 @@ function update() {
     drawBoss();
     drawPlayer();
     updateBones();
+    updateBlasters();
     drawUI();
 
     if (hp <= 0) gameOver();
@@ -222,7 +246,6 @@ function drawPlayer() {
 }
 
 function drawBoss() {
-    // White outline
     ctx.filter = "drop-shadow(0px 0px 5px white)";
     ctx.drawImage(bossImg, 240, 20, 120, 120);
     ctx.filter = "none";
@@ -231,23 +254,76 @@ function drawBoss() {
 function updateBones() {
     ctx.fillStyle = "white";
 
-    for (let i = 0; i < bones.length; i++) {
-        let b = bones[i];
+    for (let b of bones) {
         b.y += b.speed;
-
         ctx.fillRect(b.x, b.y, b.width, b.height);
 
-        if (
-            player.x < b.x + b.width &&
-            player.x + player.size > b.x &&
-            player.y < b.y + b.height &&
-            player.y + player.size > b.y
-        ) {
+        if (collide(b.x, b.y, b.width, b.height)) {
             hp -= 1;
         }
     }
 
     bones = bones.filter(b => b.y < canvas.height + 50);
+}
+
+function updateBlasters() {
+    for (let i = 0; i < blasters.length; i++) {
+        let g = blasters[i];
+        g.timer++;
+
+        // Aim at player
+        let dx = player.x - g.x;
+        let dy = player.y - g.y;
+        g.angle = Math.atan2(dy, dx);
+
+        drawBlaster(g);
+
+        if (g.timer > 60) g.firing = true;
+        if (g.timer > 140) blasters.splice(i--, 1);
+
+        if (g.firing) fireLaser(g);
+    }
+}
+
+function drawBlaster(g) {
+    ctx.save();
+    ctx.translate(g.x, g.y);
+    ctx.rotate(g.angle);
+
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, -10, 40, 20); // head
+    ctx.fillRect(-20, -20, 20, 40); // body
+
+    ctx.restore();
+}
+
+function fireLaser(g) {
+    ctx.save();
+    ctx.translate(g.x, g.y);
+    ctx.rotate(g.angle);
+
+    ctx.fillStyle = "cyan";
+    ctx.fillRect(40, -6, 600, 12);
+
+    // Laser collision
+    let px = player.x - g.x;
+    let py = player.y - g.y;
+    let proj = px * Math.cos(-g.angle) - py * Math.sin(-g.angle);
+
+    if (proj > 40 && Math.abs(py) < 10) {
+        hp -= 2;
+    }
+
+    ctx.restore();
+}
+
+function collide(x, y, w, h) {
+    return (
+        player.x < x + w &&
+        player.x + player.size > x &&
+        player.y < y + h &&
+        player.y + player.size > y
+    );
 }
 
 function drawUI() {
@@ -258,17 +334,13 @@ function drawUI() {
 
 function gameOver() {
     running = false;
-    clearInterval(gameLoop);
-
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-
     ctx.fillStyle = "red";
     ctx.font = "40px Arial";
     ctx.fillText("GAME OVER", 200, 200);
 }
 </script>
-
     
 <header>
     <h1>The R.I.C.K Archives</h1>
