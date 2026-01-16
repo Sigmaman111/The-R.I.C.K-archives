@@ -231,10 +231,10 @@ function update() {
 }
 
 function movePlayer() {
-    if (keys["ArrowLeft"]) player.x -= player.speed;
-    if (keys["ArrowRight"]) player.x += player.speed;
-    if (keys["ArrowUp"]) player.y -= player.speed;
-    if (keys["ArrowDown"]) player.y += player.speed;
+    if (keys["a"] || keys["A"]) player.x -= player.speed;
+    if (keys["d"] || keys["D"]) player.x += player.speed;
+    if (keys["w"] || keys["W"]) player.y -= player.speed;
+    if (keys["s"] || keys["S"]) player.y += player.speed;
 
     if (attackPhase && keys[" "]) shoot();
 
