@@ -137,25 +137,14 @@
 </div>
 
 <script>
-function toggleMenu() {
-    var menu = document.getElementById("menu");
-    var overlay = document.getElementById("overlay");
-
-    if (menu.style.display === "none" || menu.style.display === "") {
-        menu.style.display = "block";
-        overlay.style.display = "block";
-    } else {
-        menu.style.display = "none";
-        overlay.style.display = "none";
-    }
-}
-</script>
-<script>
 let canvas, ctx;
 let player, bones, blasters, bossImg, gameLoop;
 let keys = {};
 let hp = 100;
+let bossHP = 300;
 let running = false;
+let attackPhase = false;
+let bullets = [];
 
 function startSansFight() {
     canvas = document.getElementById("gameCanvas");
@@ -165,8 +154,12 @@ function startSansFight() {
     player = { x: 300, y: 300, size: 14, speed: 4 };
     bones = [];
     blasters = [];
+    bullets = [];
+
     hp = 100;
+    bossHP = 300;
     running = true;
+    attackPhase = false;
 
     bossImg = new Image();
     bossImg.src = "https://github.com/Sigmaman111/The-R.I.C.K-archives/blob/main/Untitled%20design%20(49).png?raw=true";
@@ -176,13 +169,23 @@ function startSansFight() {
 
     spawnBones();
     spawnBlasters();
+    phaseLoop();
 
     gameLoop = setInterval(update, 1000 / 60);
 }
 
-function spawnBones() {
+function phaseLoop() {
     setInterval(() => {
         if (!running) return;
+        attackPhase = !attackPhase;
+        bones = [];
+        blasters = [];
+    }, 6000);
+}
+
+function spawnBones() {
+    setInterval(() => {
+        if (!running || attackPhase) return;
 
         bones.push({
             x: Math.random() * 560,
@@ -196,7 +199,7 @@ function spawnBones() {
 
 function spawnBlasters() {
     setInterval(() => {
-        if (!running) return;
+        if (!running || attackPhase) return;
 
         let side = Math.floor(Math.random() * 4);
         let x, y;
@@ -206,12 +209,7 @@ function spawnBlasters() {
         if (side === 2) { x = Math.random() * 600; y = -40; }
         if (side === 3) { x = Math.random() * 600; y = 440; }
 
-        blasters.push({
-            x, y,
-            timer: 0,
-            angle: 0,
-            firing: false
-        });
+        blasters.push({ x, y, timer: 0, angle: 0, firing: false });
     }, 3500);
 }
 
@@ -225,9 +223,11 @@ function update() {
     drawPlayer();
     updateBones();
     updateBlasters();
+    updateBullets();
     drawUI();
 
     if (hp <= 0) gameOver();
+    if (bossHP <= 0) winGame();
 }
 
 function movePlayer() {
@@ -236,8 +236,20 @@ function movePlayer() {
     if (keys["ArrowUp"]) player.y -= player.speed;
     if (keys["ArrowDown"]) player.y += player.speed;
 
+    if (attackPhase && keys[" "]) shoot();
+
     player.x = Math.max(0, Math.min(canvas.width - player.size, player.x));
     player.y = Math.max(0, Math.min(canvas.height - player.size, player.y));
+}
+
+function shoot() {
+    if (bullets.length > 5) return;
+
+    bullets.push({
+        x: player.x + 6,
+        y: player.y,
+        speed: 7
+    });
 }
 
 function drawPlayer() {
@@ -252,26 +264,23 @@ function drawBoss() {
 }
 
 function updateBones() {
-    ctx.fillStyle = "white";
+    if (attackPhase) return;
 
+    ctx.fillStyle = "white";
     for (let b of bones) {
         b.y += b.speed;
         ctx.fillRect(b.x, b.y, b.width, b.height);
-
-        if (collide(b.x, b.y, b.width, b.height)) {
-            hp -= 1;
-        }
+        if (collide(b.x, b.y, b.width, b.height)) hp -= 1;
     }
-
-    bones = bones.filter(b => b.y < canvas.height + 50);
 }
 
 function updateBlasters() {
+    if (attackPhase) return;
+
     for (let i = 0; i < blasters.length; i++) {
         let g = blasters[i];
         g.timer++;
 
-        // Aim at player
         let dx = player.x - g.x;
         let dy = player.y - g.y;
         g.angle = Math.atan2(dy, dx);
@@ -289,11 +298,9 @@ function drawBlaster(g) {
     ctx.save();
     ctx.translate(g.x, g.y);
     ctx.rotate(g.angle);
-
     ctx.fillStyle = "white";
-    ctx.fillRect(0, -10, 40, 20); // head
-    ctx.fillRect(-20, -20, 20, 40); // body
-
+    ctx.fillRect(0, -10, 40, 20);
+    ctx.fillRect(-20, -20, 20, 40);
     ctx.restore();
 }
 
@@ -301,20 +308,55 @@ function fireLaser(g) {
     ctx.save();
     ctx.translate(g.x, g.y);
     ctx.rotate(g.angle);
-
     ctx.fillStyle = "cyan";
     ctx.fillRect(40, -6, 600, 12);
 
-    // Laser collision
     let px = player.x - g.x;
     let py = player.y - g.y;
     let proj = px * Math.cos(-g.angle) - py * Math.sin(-g.angle);
-
-    if (proj > 40 && Math.abs(py) < 10) {
-        hp -= 2;
-    }
+    if (proj > 40 && Math.abs(py) < 10) hp -= 2;
 
     ctx.restore();
+}
+
+function updateBullets() {
+    if (!attackPhase) return;
+
+    ctx.fillStyle = "yellow";
+
+    for (let i = 0; i < bullets.length; i++) {
+        let b = bullets[i];
+        b.y -= b.speed;
+        ctx.fillRect(b.x, b.y, 4, 10);
+
+        if (b.y < 0) bullets.splice(i--, 1);
+
+        if (b.x > 240 && b.x < 360 && b.y < 140) {
+            bossHP -= 5;
+            bullets.splice(i--, 1);
+        }
+    }
+}
+
+function drawUI() {
+    // Player HP bar
+    ctx.fillStyle = "black";
+    ctx.fillRect(20, 360, 200, 20);
+    ctx.fillStyle = "red";
+    ctx.fillRect(20, 360, hp * 2, 20);
+
+    // Boss HP bar
+    ctx.fillStyle = "black";
+    ctx.fillRect(380, 360, 200, 20);
+    ctx.fillStyle = "green";
+    ctx.fillRect(380, 360, (bossHP / 300) * 200, 20);
+
+    ctx.fillStyle = "black";
+    ctx.font = "16px Arial";
+    ctx.fillText("Player HP", 20, 350);
+    ctx.fillText("Boss HP", 380, 350);
+
+    ctx.fillText(attackPhase ? "ATTACK!" : "DODGE!", 260, 380);
 }
 
 function collide(x, y, w, h) {
@@ -326,12 +368,6 @@ function collide(x, y, w, h) {
     );
 }
 
-function drawUI() {
-    ctx.fillStyle = "black";
-    ctx.font = "20px Arial";
-    ctx.fillText("HP: " + hp, 20, 30);
-}
-
 function gameOver() {
     running = false;
     ctx.fillStyle = "black";
@@ -340,7 +376,17 @@ function gameOver() {
     ctx.font = "40px Arial";
     ctx.fillText("GAME OVER", 200, 200);
 }
+
+function winGame() {
+    running = false;
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "lime";
+    ctx.font = "40px Arial";
+    ctx.fillText("YOU WIN", 220, 200);
+}
 </script>
+
     
 <header>
     <h1>The R.I.C.K Archives</h1>
